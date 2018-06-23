@@ -1,0 +1,19 @@
+﻿Build started 09-06-2018 17:28:50.
+     1>Project "C:\Users\Shiva Sai Ram\Documents\Visual Studio 2013\Projects\Project20\Project20\Project20.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source.cpp
+         Source.cpp
+     1>c:\users\shiva sai ram\documents\visual studio 2013\projects\project20\project20\data_store.h(520): warning C4553: '==' : operator has no effect; did you intend '='?
+     1>c:\users\shiva sai ram\documents\visual studio 2013\projects\project20\project20\server_api.h(60): warning C4101: 'buff3' : unreferenced local variable
+     1>c:\users\shiva sai ram\documents\visual studio 2013\projects\project20\project20\server_api.h(250): warning C4101: 'buff' : unreferenced local variable
+     1>c:\users\shiva sai ram\documents\visual studio 2013\projects\project20\project20\source.cpp(12): warning C4101: 'gt' : unreferenced local variable
+     1>c:\users\shiva sai ram\documents\visual studio 2013\projects\project20\project20\source.cpp(10): warning C4101: 'buff' : unreferenced local variable
+     1>c:\users\shiva sai ram\documents\visual studio 2013\projects\project20\project20\data_store.h(399): warning C4715: 'get_node' : not all control paths return a value
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Shiva Sai Ram\Documents\Visual Studio 2013\Projects\Project20\Debug\Project20.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Shiva Sai Ram\Documents\Visual Studio 2013\Projects\Project20\Debug\Project20.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Shiva Sai Ram\Documents\Visual Studio 2013\Projects\Project20\Debug\Project20.lib" /MACHINE:X86 Debug\Source.obj
+         Project20.vcxproj -> C:\Users\Shiva Sai Ram\Documents\Visual Studio 2013\Projects\Project20\Debug\Project20.exe
+     1>Done Building Project "C:\Users\Shiva Sai Ram\Documents\Visual Studio 2013\Projects\Project20\Project20\Project20.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.02

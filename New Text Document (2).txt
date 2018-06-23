@@ -1,0 +1,221 @@
+#pragma once
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+
+struct node{
+	char* column_name;
+	int value = 0;
+	int version = 0;
+
+	struct node* next_column;
+	struct node* next_version;
+};
+struct row_metadata{
+	node* address = NULL;
+	char* key;
+	int current;
+	int commit;
+};
+
+struct transaction{
+	int local_current_number;
+};
+
+struct column_metadata{
+	char* col_name;
+	column_metadata* next_column;
+};
+
+struct row_metadata* row_list;
+
+struct node** hashtable;
+
+struct column_metadata* list_cols;
+
+
+
+
+int hash(char *str)
+{
+	int hash = 5381;
+	int c;
+
+	while (c = *str++)
+		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+	return hash%10000;
+}
+
+void add_col(column_metadata* col){
+
+	column_metadata* temp = list_cols;
+	if (temp == NULL){
+		list_cols = col;
+		return;
+	}
+	while (temp != NULL && temp->next_column!=NULL){
+		temp = temp->next_column;
+	}
+	temp->next_column = col;
+}
+
+
+void load_hashtable(){
+	row_list = NULL;
+	list_cols = NULL;
+}
+
+
+row_metadata* return_address_of_node(char* key){
+	if (row_list == NULL){
+		return NULL;
+	}
+	else{
+		row_metadata* temp = row_list;
+		while (temp != NULL){
+			if (strcmp(temp->key, key)){
+				return temp;
+			}
+		}
+		return NULL;
+	}
+}
+
+//int get_current_number(* key){
+//	if (row_list == NULL){
+//		return -1;
+//	}
+//	else{
+//		row_metadata* temp = row_list;
+//		while (temp != NULL){
+//			if (strcmp(temp->key, key)){
+//				temp->current++;
+//				return temp->current;
+//			}
+//		}
+//		return -1;
+//	}
+//}
+
+void put(transaction* t,char* key, char* col_name, int value){
+	row_metadata* row = return_address_of_node(key);
+	//row_metadata_table[index]->current++;
+	//t->local_current_number = get_current_number(key);
+
+	int my_current_version = t->local_current_number ;
+	int col_found = 0;
+
+	node* temp = row->address;
+	//first node itself is matching 
+	if (temp != NULL && !strcmp(temp->column_name, col_name)){
+		col_found = 1;
+		node* temp1 = (node*)malloc(sizeof(node));
+		temp1->column_name = col_name;
+		temp1->next_column = temp->next_column;
+		temp1->next_version = temp;
+		temp1->value = value;
+		temp1->version = my_current_version;
+		row->address = temp1;
+	}//second and more rows matching
+	while (temp!=NULL && temp->next_column != NULL ){
+		if (!strcmp(temp->next_column->column_name, col_name)){
+			col_found = 1;
+			node* temp1 = (node*)malloc(sizeof(node));
+			temp1->column_name = col_name;
+			temp1->next_column = temp->next_column->next_column;
+			temp1->next_version = temp->next_column->next_version;
+			temp1->value = value;
+			temp1->version = my_current_version;
+			temp->next_column = temp1;
+
+
+		}
+		temp = temp->next_column;
+	}
+	if (col_found == 0){
+		//add new node to the hashtable at index
+		column_metadata* new_col = (column_metadata*)malloc(sizeof(column_metadata));
+		new_col->col_name = (char*)malloc(sizeof(char)*strlen(col_name));
+		strcpy(new_col->col_name, col_name);
+		new_col->next_column = NULL;
+		add_col(new_col);
+		node* new_node = (node*)malloc(sizeof(node));
+		new_node->column_name = (char*)malloc(sizeof(char)*strlen(col_name));
+		strcpy(new_node->column_name, col_name);
+		new_node->next_column = NULL;
+		new_node->next_version = NULL;
+		new_node->value = value;
+		new_node->version = my_current_version;
+		temp = row->address;
+		if (row->address != NULL){
+			while (temp->next_column != NULL){
+				temp = temp->next_column;
+			}
+			temp->next_column = new_node;
+		}
+		else{
+			row->address = new_node;
+		}
+		
+	}
+
+}
+
+
+int get_value( transaction* t,  char* key, char* column_name){
+	row_metadata* row= return_address_of_node(key);
+	int committed_version = address->;
+
+	node* temp = hashtable[index];
+	while (temp != NULL){
+		if (!strcmp(temp->column_name, column_name)){
+			//if the first node is itself the latest node
+			if (temp->version = committed_version){
+				return temp->value;
+			}
+			else{
+				//traverse to get the latest node
+				node* version_temp = temp;
+				while (version_temp->next_version != NULL){
+					if (version_temp->version <= committed_version){
+						return version_temp->value;
+					}
+					version_temp = version_temp->next_version;
+				}
+			}
+		}
+		temp = temp->next_column;
+	}
+
+}
+
+void display(char* key){
+	int index = hash(key);
+	printf("Current: %d\n", row_metadata_table[index]->current);
+	printf("Commit: %d\n", row_metadata_table[index]->commit);
+	node* temp = hashtable[index];
+	while (temp != NULL){
+		printf("%s ", temp->column_name);
+		printf("%d ", temp->value);
+		printf("%d\n", temp->version);
+		temp = temp->next_column;
+	}
+}
+
+void print_list_cols(){
+	column_metadata* temp = list_cols;
+	printf("List of columns\n");
+	while (temp != NULL){
+		printf("%s ", temp->col_name);
+		temp = temp->next_column;
+	}
+	printf("\n");
+}
+
+
+
+void delete_row(char* key){
+	hashtable[hash(key)] = NULL;
+}
